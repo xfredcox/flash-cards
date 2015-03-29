@@ -1,0 +1,27 @@
+{
+  "name": "flash-cards",
+  "version": "0.0.0",
+  "authors": [
+    "Fred Cox <xfredcox@gmail.com>"
+  ],
+  "description": "Flashcards webcomponent.",
+  "main": "flash-cards.html",
+  "keywords": [
+    "polymer",
+    "flashcards",
+    "webcomponents"
+  ],
+  "license": "MIT",
+  "homepage": "www.github.com/xfredcox/flash-cards",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/src/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "markdown": "~0.5.0"
+  }
+}

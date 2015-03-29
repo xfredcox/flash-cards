@@ -3,7 +3,9 @@
 <html>
 
     <head>
-	<link rel="import" href="./bower_components/polymer/polymer.html">	
+	<link rel="import" href="./bower_components/polymer/polymer.html">
+	<link rel="import" href="./bower_components/prism-js/prism-js.html">	
+	<script src="./bower_components/markdown/lib/markdown.js"></script>		
 	<link rel="import" href="./flash-cards.html">
 	
     </head>
@@ -12,6 +14,10 @@
 	<h1>Simple Questions</h1>
 
 	<flash-cards data='{"name":"My Cards", "cards":[{"question":"What is this?", "answer": "A Polymer element called flash-cards."},{"question":"What is it for?", "answer": "Memorizing content."}]}'></flash-cards>
+
+	<h1>Markdown Questions</h1>
+
+	<flash-cards data='{"name":"My Cards", "cards":[{"question":"Write in markdown:\n\n&#35 Main Title", "answer": "&#96&#96markdown\n&#35 Main Title\n&#96&#96"},{"question":"Write in markdown:\n\n&#35&#35 Subtitle", "answer": "``markdown\n&#35&#35 Subtitle\n``"},{"question":"Write in markdown:\n\n- First Item\n- Second Item\n- Third Item", "answer": "&#96&#96markup\n<html>\n<body unresolved>\n</body>\n</html>\n&#96&#96"}]}'></flash-cards>	
 	
     </body>
     
