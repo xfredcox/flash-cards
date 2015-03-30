@@ -14,6 +14,7 @@
 	 }
 	 
 	 #container {
+	     overflow: hidden;
 	     max-width: 400px;
 	     height: 400px;
 	     padding: 0px;
@@ -30,7 +31,7 @@
 	     text-align: center;
 	     border: solid black 1px;
 	 }
-	 #question {
+	 .question {
 	     overflow: scroll;	     
 	     width: 90%;
 	     height: 100px;
@@ -40,7 +41,7 @@
 	     padding-left: 5%;
 	     padding-right: 5%;	   	   	   
 	 }
-	 #answer {
+	 .answer {
 	     overflow: scroll;
 	     width: 90%;
 	     height: 283px;
@@ -60,21 +61,36 @@
 	
 	<div id="container" class="noselect">
 
-	    <div id="header">
-		{{name}} - {{N ? n + 1 : n}}/{{N}}
+	    <div id="header"">
+		{{name}} - {{N && n < N? n + 1 : n}}/{{N}}
 	    </div>
 
-	    <div id="workspace" on-click="{{next}}">
+	    <core-animated-pages transitions="slide-from-right" selected={{n}}>
 
-		<div id="question">
-		    <span id="question_content" class="middle"></span>
-		</div>
+		<template id="cards" repeat="{{card, i in cards}}">
+		    <section>
+			<div class="workspace" on-click="{{next}}">
+			    <div class="question">
+				<span class="question_content middle">{{card.html_question}}</span>
+			    </div>
+			    <div class="answer">
+				<span class="answer_content middle" hidden?="{{!showState}}">{{card.html_answer}}</span>
+			    </div>	 
+			</div>
+		    </section>
+		</template>
 
-		<div id="answer">
-		    <span id="answer_content" class="middle" hidden?="{{!showState}}"></span>
-		</div>	 
-
-	    </div>
+		<template if="{{N}}">
+		    <section>
+			<div class="workspace" on-click="{{next}}">
+			    <div class="notification">
+				<span class="middle">Complete!</span>
+			    </div>
+			</div>
+		    </section>
+		</template>		
+	    </core-animated-pages>
+	    
 	</div>
 
 	
@@ -107,29 +123,27 @@
 		 this.cards = _data && _data.cards ? _data.cards : this.cards;
 		 this.showState = false;
 		 this.n = 0;
-		 this.nChanged();
+		 this.cardsChanged();
 		 
 		 this.log ? console.log("<flash-cards> dataChanged *finish*") : null;
 	     },
 
-	     nChanged: function () {
+	     cardsChanged: function () {
 		 this.log ? console.log("<flash-cards> nChanged *start*") : null;
 
 		 // Reset Values
 		 this.showState = false;
-		 this.question = this.renderMarkdown(this.cards[this.n].question);
-		 this.answer = this.renderMarkdown(this.cards[this.n].answer);		
-
-		 // Inject the HTML output into the respective element
-		 this.injectBoundHTML(this.question, this.$.question_content);
-		 this.injectBoundHTML(this.answer, this.$.answer_content);		     		
+		 for (var i =0; i < this.N; i++) {		 
+		     this.cards[i].html_question = this.renderMarkdown(this.cards[i].question);
+		     this.cards[i].html_answer = this.renderMarkdown(this.cards[i].answer);		
+		 }
 		 
 		 this.log ? console.log("<flash-cards> nChanged *finish*") : null;
 	     },
 	     next: function () {
 
 		 if (this.showState) {
-		     if (this.n + 1 == this.N) {
+		     if (this.n == this.N) {
 			 this.n = 0;
 		     } else {
 			 this.n += 1;
