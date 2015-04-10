@@ -58,7 +58,7 @@
 	 }
 	 
 	</style>
-	
+
 	<div id="container" class="noselect">
 
 	    <div id="header"">
@@ -82,9 +82,10 @@
 
 		<template if="{{N}}">
 		    <section>
-			<div class="workspace" on-click="{{next}}">
+			<div class="workspace">
 			    <div class="notification">
-				<span class="middle">Complete!</span>
+				<p><span class="middle">Complete!</span></p>
+				<p><span class="middle pointer" on-click="{{restart}}">Restart</span></p>
 			    </div>
 			</div>
 		    </section>
@@ -104,6 +105,15 @@
 	     computed: {
 		 "N": "cards.length",
 	     },
+	     restart: function (data) {
+		 // Reset Values
+		 this.name = data && data.name ? data.name : this.name;
+		 this.cards = data && data.cards ? data.cards : this.cards;
+		 this.showState = false;
+		 this.n = 0;
+		 // Full reset with re-render
+		 this.cardsChanged();
+	     },
 	     n: 0,
 	     cards: [],
 	     name: "Flashcards",
@@ -118,12 +128,7 @@
 		     var _data = this.data;
 		 }
 		 
-		 // Reset Values
-		 this.name = _data && _data.name ? _data.name : this.name;
-		 this.cards = _data && _data.cards ? _data.cards : this.cards;
-		 this.showState = false;
-		 this.n = 0;
-		 this.cardsChanged();
+		 this.restart(_data);
 		 
 		 this.log ? console.log("<flash-cards> dataChanged *finish*") : null;
 	     },
@@ -145,16 +150,14 @@
 		 this.log ? console.log("<flash-cards> nChanged *finish*") : null;
 	     },
 	     next: function () {
-
+		 this.log ? console.log("<flash-cards> next *start*") : null;
 		 if (this.showState) {
-		     if (this.n == this.N) {
-			 this.n = 0;
-		     } else {
-			 this.n += 1;
-		     }
+		     this.n += 1;
+		     this.showState = false;
 		 } else {
 		     this.showState = true;
 		 }
+		 this.log ? console.log("<flash-cards> next *finish*") : null;
 	     },
 	     renderMarkdown: function (text) {
 		 this.log ? console.log("<flash-cards> renderMarkdown *start*") : null;
