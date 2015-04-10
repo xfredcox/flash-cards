@@ -65,16 +65,16 @@
 		{{name}} - {{N && n < N? n + 1 : n}}/{{N}}
 	    </div>
 
-	    <core-animated-pages transitions="slide-from-right" selected={{n}}>
+	    <core-animated-pages id="slides" transitions="slide-from-right" selected={{n}}>
 
 		<template id="cards" repeat="{{card, i in cards}}">
 		    <section>
 			<div class="workspace" on-click="{{next}}">
 			    <div class="question">
-				<span class="question_content middle">{{card.html_question}}</span>
+				<span class="question_content middle"></span>
 			    </div>
 			    <div class="answer">
-				<span class="answer_content middle" hidden?="{{!showState}}">{{card.html_answer}}</span>
+				<span class="answer_content middle" hidden?="{{!showState}}"></span>
 			    </div>	 
 			</div>
 		    </section>
@@ -136,8 +136,12 @@
 		 for (var i =0; i < this.N; i++) {		 
 		     this.cards[i].html_question = this.renderMarkdown(this.cards[i].question);
 		     this.cards[i].html_answer = this.renderMarkdown(this.cards[i].answer);		
+
+		     // Not really proud of this implementation, but it seemed like the safest/fastest/simplest I could come up with.
+		     this.$.slides.querySelectorAll('.question_content')[i].innerHTML = this.cards[i].html_question;
+		     this.$.slides.querySelectorAll('.answer_content')[i].innerHTML = this.cards[i].html_answer;
 		 }
-		 
+
 		 this.log ? console.log("<flash-cards> nChanged *finish*") : null;
 	     },
 	     next: function () {
