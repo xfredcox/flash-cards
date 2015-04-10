@@ -52,10 +52,26 @@
 	     padding-left: 5%;
 	     padding-right: 5%;	   	   
 	 }
+	 .notification {
+	     overflow: scroll;	     
+	     width: 90%;
+	     height: 388px;
+	     border: solid black 1px;
+	     text-align: center;
+	     line-height: 100px;
+	     padding-left: 5%;
+	     padding-right: 5%;	   	   	   
+	 }	 
 	 .middle {
 	     display: inline-block;
 	     vertical-align: middle;
 	     line-height: normal;  
+	 }
+	 .centered {
+	     text-align: center;
+	 }
+	 .pointer {
+	     cursor: pointer;
 	 }
 	 
 	</style>
@@ -85,8 +101,8 @@
 		    <section>
 			<div class="workspace">
 			    <div class="notification">
-				<p><span class="middle">Complete!</span></p>
-				<p><span class="middle pointer" on-click="{{restart}}">Restart</span></p>
+				<p class=""><span>Complete!</span></p>
+				<p class=""><span class="pointer" on-click="{{restart}}">Click to Restart</span></p>
 			    </div>
 			</div>
 		    </section>
