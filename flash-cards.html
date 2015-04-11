@@ -1,3 +1,7 @@
+<link rel="import" href="../core-animated-pages/core-animated-pages.html">
+<link rel="import" href="../prism-js/prism-js.html">	
+<script src="../markdown/lib/markdown.js"></script>		
+
 <polymer-element name="flash-cards" attributes="data">
     <template>
 
@@ -155,7 +159,7 @@
 
 		 // Reset Values
 		 this.showState = false;
-		 for (var i =0; i < this.N; i++) {		 
+		 for (var i = 0; i < this.N; i++) {		 
 		     this.cards[i].html_question = this.renderMarkdown(this.cards[i].question);
 		     this.cards[i].html_answer = this.renderMarkdown(this.cards[i].answer);		
 
