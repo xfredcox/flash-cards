@@ -1,10 +1,9 @@
-<link rel="import" href="../core-animated-pages/core-animated-pages.html">
-<link rel="import" href="../prism-js/prism-js.html">	
-<script src="../markdown/lib/markdown.js"></script>		
+<link rel="import" href="/bower_components/core-animated-pages/core-animated-pages.html">
+<script src="markdown.js"></script>
+<link rel="import" href="/bower_components/prism-js/prism-js.html">
 
 <polymer-element name="flash-cards" attributes="data">
     <template>
-
 	
 	<style>
 	 
@@ -168,6 +167,8 @@
 		     this.$.slides.querySelectorAll('.answer_content')[i].innerHTML = this.cards[i].html_answer;
 		 }
 
+		 Prism.highlightAll();
+
 		 this.log ? console.log("<flash-cards> nChanged *finish*") : null;
 	     },
 	     next: function () {
@@ -195,7 +196,7 @@
 
 		 function recur (row) {
 		     
-		     if ( row[0] === "inlinecode" ) {
+		     if ( row[0] === "inlinecode") {
 			 var lang = row[1].match(/^.+\n/g);
 			 var n = 0;
 			 if (lang == null) {
@@ -206,6 +207,7 @@
 			 
 			 row[0] = "inlinecode"
 			 row[1] = {'language':lang[0].slice(0,lang[0].length-1)}
+
 			 row.push(code)
 			     
 		     } else {
