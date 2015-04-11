@@ -1,8 +1,9 @@
 <link rel="import" href="/bower_components/core-animated-pages/core-animated-pages.html">
+<link rel="import" href="/bower_components/google-sheets/google-sheets.html">
 <script src="markdown.js"></script>
 <link rel="import" href="/bower_components/prism-js/prism-js.html">
 
-<polymer-element name="flash-cards" attributes="data">
+<polymer-element name="flash-cards" attributes="json_data spreadsheet_token">
     <template>
 	
 	<style>
@@ -81,6 +82,8 @@
 
 	<div id="container" class="noselect">
 
+	    <google-sheets id="google_sheets" key="{{spreadsheet_token}}" rows="{{spreadsheet_rows}}" tabid="1" published ></google-sheets>
+	    
 	    <div id="header"">
 		{{name}} - {{N && n < N? n + 1 : n}}/{{N}}
 	    </div>
@@ -138,19 +141,52 @@
 	     cards: [],
 	     name: "Flashcards",
 	     showState: false,
-	     dataChanged: function () {
-		 this.log ? console.log("<flash-cards> dataChanged *start*") : null;
+	     domReady: function () {
+		 this.log ? console.log("<flash-cards> domReady *start*") : null;
 
-		 // Parse if necessary
-		 if (typeof this.data == "string") {
-		     var _data = JSON.parse(this.data);
-		 } else {
-		     var _data = this.data;
+		 var that = this
+		 
+		 // Is it JSON data input?
+		 if (this.json_data) {
+		     // Parse if necessary
+		     if (typeof this.json_data == "string") {
+			 var _data = JSON.parse(this.json_data);
+		     } else {
+			 var _data = this.json_data;
+		     }
+
+		     that.restart(_data);
+
+		 // Is it a Google Spreadsheet input?
+		 } else if (this.spreadsheet_token) {
+
+		     this.addEventListener('google-sheet-data', function () {
+
+			 var cards = [];
+
+			 for (var c in that.spreadsheet_rows) {
+			     var item = {};
+			     try {
+				 item.question = that.spreadsheet_rows[c].gsx$question.$t;
+				 item.answer = that.spreadsheet_rows[c].gsx$answer.$t;
+				 cards.push(item);
+			     } catch (e) {
+				 that.log ? console.warn("<flash-cards> Warning: Error processing row:", e) : null;		 
+				 that.log ? console.warn("<flash-cards>", that.spreadsheet_rows[c]) : null;		 
+			     }
+			 }
+
+			 that.name = that.$.google_sheets.tab.title;
+
+			 var _data = {'name':that.name,
+				      'cards': cards}
+
+			 that.restart(_data);			
+		     })
+
 		 }
-		 
-		 this.restart(_data);
-		 
-		 this.log ? console.log("<flash-cards> dataChanged *finish*") : null;
+
+		 this.log ? console.log("<flash-cards> domReady *finish*") : null;		 
 	     },
 
 	     cardsChanged: function () {
@@ -158,11 +194,15 @@
 
 		 // Reset Values
 		 this.showState = false;
+
+		 console.log(this.cards)
+		 console.log(this.$.slides.querySelectorAll('.question_content'))
 		 for (var i = 0; i < this.N; i++) {		 
 		     this.cards[i].html_question = this.renderMarkdown(this.cards[i].question);
 		     this.cards[i].html_answer = this.renderMarkdown(this.cards[i].answer);		
-
+		 
 		     // Not really proud of this implementation, but it seemed like the safest/fastest/simplest I could come up with.
+  		console.log(i)
 		     this.$.slides.querySelectorAll('.question_content')[i].innerHTML = this.cards[i].html_question;
 		     this.$.slides.querySelectorAll('.answer_content')[i].innerHTML = this.cards[i].html_answer;
 		 }
@@ -237,13 +277,6 @@
 
 		 this.log ? console.log("<flash-cards> ready *finish*") : null;
 	     },
-	     domReady: function () {
-		 this.log ? console.log("<flash-cards> domReady *start*") : null;
-
-		 
-
-		 this.log ? console.log("<flash-cards> domReady *finish*") : null;
-	     },	    	    
 	 })
 	     
      })()
