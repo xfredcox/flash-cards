@@ -7,6 +7,15 @@
     <template>
 	
 	<style>
+
+
+	 :host {
+	     width: 100%;
+/*	     max-width: 800px;	     */
+	     height: 100%;
+	     display: block;
+	     padding: 1%;
+	 }
 	 
 	 .noselect {
 	     -webkit-touch-callout: none;
@@ -19,48 +28,45 @@
 	 
 	 #container {
 	     overflow: hidden;
-	     max-width: 400px;
-	     height: 400px;
+	     height: 22px;
+	     width: 98%;
 	     padding: 0px;
-	     margin: 20px;
 	     border: solid black 1px;
 	     border-radius: 5px;
+	     transition: heigth 1600ms ease;
+	     -moz-transition: height 1600ms ease;
+	     -webkit-transition: height 1600ms ease;
+	     -o-transition: height 1600ms ease;
 	 }
 
 	 #header {
 	     width: 100%;
-	     height: 12px;
-	     font-size: 10px;
+	     height: 22px;
+	     font-size: 16px;
 	     background-color: steelblue;
 	     color: #eee;
 	     text-align: center;
-	     border: solid black 1px;
 	 }
 	 .question {
 	     overflow: scroll;	     
 	     width: 90%;
-	     height: 100px;
-	     border: solid black 1px;
 	     text-align: center;
-	     line-height: 100px;
+	     border-bottom: solid #e2e2e2 1px;	     
 	     padding-left: 5%;
-	     padding-right: 5%;	   	   	   
+	     padding-right: 5%;
 	 }
 	 .answer {
+	     position: relative;
 	     overflow: scroll;
 	     width: 90%;
-	     height: 283px;
-	     border: solid black 1px;
 	     text-align: center;
-	     line-height: 283px;
 	     padding-left: 5%;
 	     padding-right: 5%;	   	   
 	 }
 	 .notification {
 	     overflow: scroll;	     
 	     width: 90%;
-	     height: 388px;
-	     border: solid black 1px;
+	     height: 100%;
 	     text-align: center;
 	     line-height: 100px;
 	     padding-left: 5%;
@@ -128,6 +134,21 @@
 	     computed: {
 		 "N": "cards.length",
 	     },
+	     resizeCards: function (that) {
+		 that = that || this;
+
+//		 var height = window.innerWidth / 1.6180;
+		 var height = window.innerHeight * 0.9;
+		 that.$.container.style.height = height + "px"
+
+		 for (var i = 0; i < that.N; i++) {		 
+		     that.$.slides.querySelectorAll('.question')[i].style.height = height * 0.4 + "px";
+		     that.$.slides.querySelectorAll('.answer')[i].style.height = height * 0.52 + "px";
+
+		     that.$.slides.querySelectorAll('.question')[i].style['line-height'] = height * 0.4 + "px";
+		     that.$.slides.querySelectorAll('.answer')[i].style['line-height'] = height * 0.52 + "px"
+		 }
+	     },
 	     restart: function (data) {
 		 // Reset Values
 		 this.name = data && data.name ? data.name : this.name;
@@ -182,6 +203,7 @@
 				      'cards': cards}
 
 			 that.restart(_data);			
+			 that.resizeCards();
 		     })
 
 		 }
@@ -274,6 +296,8 @@
 	     ready: function () {
 		 this.log ? console.log("<flash-cards> ready *start*") : null;
 
+		 var that = this;
+		 window.addEventListener('resize', function() {that.resizeCards(that)});
 
 		 this.log ? console.log("<flash-cards> ready *finish*") : null;
 	     },
