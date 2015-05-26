@@ -2,6 +2,9 @@
 <link rel="import" href="/bower_components/google-sheets/google-sheets.html">
 <script src="markdown.js"></script>
 <link rel="import" href="/bower_components/prism-js/prism-js.html">
+<link rel="import" href="./bower_components/core-animated-pages/core-animated-pages.html">
+<link rel="import" href="./bower_components/prism-js/prism-js.html">	
+<script src="./bower_components/markdown/lib/markdown.js"></script>	
 
 <polymer-element name="flash-cards" attributes="json_data spreadsheet_token">
     <template>
@@ -91,7 +94,7 @@
 
 	    <google-sheets id="google_sheets" key="{{spreadsheet_token}}" rows="{{spreadsheet_rows}}" tabid="1" published ></google-sheets>
 	    
-	    <div id="header" on-click={{changeCompact}} class="pointer">
+	    <div id="header" on-tap={{changeCompact}} class="pointer">
 		{{name}} - {{N && n < N? n + 1 : n}}/{{N}}
 	    </div>
 
@@ -99,7 +102,7 @@
 
 		<template id="cards" repeat="{{card, i in cards}}">
 		    <section>
-			<div class="workspace" on-click="{{next}}">
+			<div class="workspace" on-tap="{{next}}">
 			    <div class="question">
 				<span class="question_content middle"></span>
 			    </div>
@@ -115,7 +118,7 @@
 			<div class="workspace">
 			    <div class="notification">
 				<p class=""><span>Complete!</span></p>
-				<p class=""><span class="pointer" on-click="{{restart}}">Click to Restart</span></p>
+				<p class=""><span class="pointer" on-tap="{{restart}}">Click to Restart</span></p>
 			    </div>
 			</div>
 		    </section>
@@ -148,13 +151,15 @@
 //		 var height = window.innerWidth / 1.6180;
 		 var height = window.innerHeight * 0.9;
 		 that.$.container.style.height = height + "px"
-
-		 for (var i = 0; i < that.N; i++) {		 
+     
+     for (var i = 0; i < that.N; i++) {
+			 if (that.$.slides.querySelectorAll('.question')[i]) {
 		     that.$.slides.querySelectorAll('.question')[i].style.height = height * 0.4 + "px";
 		     that.$.slides.querySelectorAll('.answer')[i].style.height = height * 0.52 + "px";
 
 		     that.$.slides.querySelectorAll('.question')[i].style['line-height'] = height * 0.4 + "px";
-		     that.$.slides.querySelectorAll('.answer')[i].style['line-height'] = height * 0.52 + "px"
+			 that.$.slides.querySelectorAll('.answer')[i].style['line-height'] = height * 0.52 + "px"
+			 }
 		 }
 	     },
 	     makeCompact: function (that) {
@@ -238,16 +243,17 @@
 		 // Reset Values
 		 this.showState = false;
 
-		 console.log(this.cards)
-		 console.log(this.$.slides.querySelectorAll('.question_content'))
 		 for (var i = 0; i < this.N; i++) {		 
 		     this.cards[i].html_question = this.renderMarkdown(this.cards[i].question);
 		     this.cards[i].html_answer = this.renderMarkdown(this.cards[i].answer);		
 		 
-		     // Not really proud of this implementation, but it seemed like the safest/fastest/simplest I could come up with.
-  		console.log(i)
-		     this.$.slides.querySelectorAll('.question_content')[i].innerHTML = this.cards[i].html_question;
-		     this.$.slides.querySelectorAll('.answer_content')[i].innerHTML = this.cards[i].html_answer;
+            	// Not really proud of this implementation, but it seemed like the safest/fastest/simplest I could come up with.
+
+	if (this.$.slides.querySelectorAll('.question_content')[i]) {
+				     this.$.slides.querySelectorAll('.question_content')[i].innerHTML = this.cards[i].html_question;
+    				     this.$.slides.querySelectorAll('.answer_content')[i].innerHTML = this.cards[i].html_answer;
+				     }
+
 		 }
 
 		 Prism.highlightAll();

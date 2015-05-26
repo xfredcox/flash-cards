@@ -25,7 +25,8 @@
     "core-animated-pages": "Polymer/core-animated-pages#~0.5.5",
     "prismjs": "https://github.com/PrismJS/prism.git",
     "prism-js": "https://github.com/addyosmani/prism-js.git#~0.1.0",
-    "google-sheets": "~0.0.5"
+    "google-sheets": "~0.0.5",
+    "markdown": "~0.5.0"
   },
   "componentsDirectory": "bower_components/"
 }
