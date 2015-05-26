@@ -1,2 +1,5 @@
-bower_components
+bower_components/*
+!bower_components/markdown/
+!bower_components/prismjs/
+!bower_components/prism-js/
 *~
